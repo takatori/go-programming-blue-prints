@@ -17,6 +17,8 @@
     <ul id="messages"></ul>
     WebSocketを使ったチャットアプリケーション
     <form id="chatbox">
+        {{.UserData.name}}:
+        <br/>
         <textarea></textarea>
         <input type="submit" value="送信" />
     </form>
@@ -32,7 +34,7 @@
                     alert("エラー: WebScoket接続が行われていません。")
                     return false;
                 }
-                socket.send(msgBox.val());
+                socket.send(JSON.stringify({ "Message": msgBox.val() }));
                 msgBox.val("");
                 return false;
             });
@@ -41,10 +43,15 @@
             } else {
                 socket = new WebSocket("ws://{{.Host}}/room");
                 socket.onclose = function () {
-                    alsert("接続が終了しました。");
+                    alert("接続が終了しました。");
                 }
                 socket.onmessage = function (e) {
-                    messages.append($("<li>").text(e.data));
+                    var msg = eval("(" + e.data + ")");
+                    messages.append(
+                        $("<li>").append(
+                            $("<strong>").text(msg.Name + ": "),
+                            $("<span>").text(msg.Message)
+                        ));
                 }
             }
         })
