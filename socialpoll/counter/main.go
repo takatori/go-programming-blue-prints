@@ -106,7 +106,7 @@ func main() {
 	for {
 		select {
 		case <-termChan:
-			updater.Stop()
+ 				updater.Stop()
 			q.Stop()
 		case <-q.StopChan:
 			// 完了しました
